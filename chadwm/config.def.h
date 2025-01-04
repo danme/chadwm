@@ -6,10 +6,10 @@
 static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const unsigned int default_border = 0;   /* to switch back to default border after dynamic border resizing via keybinds */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const unsigned int gappih    = 10;       /* horiz inner gap between windows */
-static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
-static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
+static const unsigned int gappih    = 5;       /* horiz inner gap between windows */
+static const unsigned int gappiv    = 5;       /* vert inner gap between windows */
+static const unsigned int gappoh    = 4;       /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 4;       /* vert outer gap between windows and screen edge */
 static const int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
@@ -62,13 +62,13 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static char *tags[] = {"", "", "", "", ""};
+static char *tags[] = {"", "", "󱃬", "", ""};
 
-static const char* eww[] = { "eww", "open" , "eww", NULL };
+static const char* rofi[] = { "rofi", "-show" , "drun", NULL };
 
 static const Launcher launchers[] = {
     /* command     name to display */
-    { eww,         "" },
+    { rofi,         "" },
 };
 
 static const int tagschemes[] = {
@@ -88,6 +88,7 @@ static const Rule rules[] = {
     /* class      instance    title       tags mask     iscentered   isfloating   monitor */
     { "Gimp",     NULL,       NULL,       0,            0,           1,           -1 },
     { "Firefox",  NULL,       NULL,       1 << 8,       0,           0,           -1 },
+    { "Pwvucontrol", NULL,    NULL,       0,            1,           1,           -1 },
     { "eww",      NULL,       NULL,       0,            0,           1,           -1 },
 };
 
@@ -143,13 +144,7 @@ static const Key keys[] = {
 	{0,				XF86XK_MonBrightnessUp,     spawn,	{.v = light_up}},
 	{0,				XF86XK_MonBrightnessDown,   spawn,	{.v = light_down}},
 
-    // screenshot fullscreen and cropped
-    {MODKEY|ControlMask,                XK_u,       spawn,
-        SHCMD("maim | xclip -selection clipboard -t image/png")},
-    {MODKEY,                            XK_u,       spawn,
-        SHCMD("maim --select | xclip -selection clipboard -t image/png")},
-
-    { MODKEY,                           XK_c,       spawn,          SHCMD("rofi -show drun") },
+    { MODKEY,                           XK_p,       spawn,          SHCMD("rofi -show drun") },
     { MODKEY,                           XK_Return,  spawn,          SHCMD("st")},
 
     // toggle stuff
@@ -179,7 +174,8 @@ static const Key keys[] = {
     { MODKEY|ShiftMask,                 XK_j,       movestack,      {.i = +1 } },
     { MODKEY|ShiftMask,                 XK_k,       movestack,      {.i = -1 } },
     { MODKEY|ShiftMask,                 XK_Return,  zoom,           {0} },
-    { MODKEY,                           XK_Tab,     view,           {0} },
+    { MODKEY,                           XK_Tab,     focusstack,     {.i = +1 } },
+    { MODKEY|ShiftMask,                 XK_Tab,     view,           {0} },
 
     // overall gaps
     { MODKEY|ControlMask,               XK_i,       incrgaps,       {.i = +1 } },
@@ -225,9 +221,6 @@ static const Key keys[] = {
     { MODKEY|ShiftMask,                 XK_minus,   setborderpx,    {.i = -1 } },
     { MODKEY|ShiftMask,                 XK_p,       setborderpx,    {.i = +1 } },
     { MODKEY|ShiftMask,                 XK_w,       setborderpx,    {.i = default_border } },
-
-    // kill dwm
-    { MODKEY|ControlMask,               XK_q,       spawn,        SHCMD("killall bar.sh chadwm") },
 
     // kill window
     { MODKEY,                           XK_q,       killclient,     {0} },
